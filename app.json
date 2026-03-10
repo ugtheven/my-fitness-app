@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "my-fitness-app",
+    "slug": "my-fitness-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.myfitnessapp"
+    },
+    "android": {
+      "package": "com.myfitnessapp",
+      "adaptiveIcon": {
+        "backgroundColor": "#000000"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
