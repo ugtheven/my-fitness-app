@@ -1,10 +1,10 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useMutation } from 'convex/react';
 import { useCallback, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Alert } from '@/components/Alert';
 import { Button } from '@/components/Button';
 import { SimpleInput } from '@/components/SimpleInput';
+import { Ionicons } from '@/lib/icons';
 import { api } from '../../convex/_generated/api';
 
 type Props = {

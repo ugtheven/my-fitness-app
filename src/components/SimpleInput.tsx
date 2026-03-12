@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import {
@@ -8,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Ionicons } from '@/lib/icons';
 
 type SimpleInputProps = TextInputProps & {
   label?: string;
@@ -34,13 +34,13 @@ export function SimpleInput({
 
       <View
         className={[
-          'flex-row items-center rounded-xl border bg-background-paper px-4 py-3',
+          'flex-row items-center rounded-xl border bg-background-paper p-4',
           error ? 'border-accent-danger' : 'border-neutral-800',
         ].join(' ')}
       >
         {startIcon ? <View className="mr-2">{startIcon}</View> : null}
         <TextInput
-          className="4 flex-1 text-base text-text outline-none"
+          className="flex-1 p-0 text-base text-text outline-none"
           placeholderTextColor="#6b6b6b"
           secureTextEntry={hidden}
           {...props}

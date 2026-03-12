@@ -68,9 +68,10 @@ export function Button({
         colors={['#22c55e', '#16a34a']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        className="w-full flex-row items-center justify-center py-4"
       >
-        {content}
+        <View className="w-full flex-row items-center justify-center py-4">
+          {content}
+        </View>
       </LinearGradient>
     </TouchableOpacity>
   );
