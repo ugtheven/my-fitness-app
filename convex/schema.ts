@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineSchema, defineTable } from 'convex/server';
+import { v } from 'convex/values';
 
 export default defineSchema({
   users: defineTable({
@@ -7,11 +7,11 @@ export default defineSchema({
     email: v.string(),
     passwordHash: v.string(),
     createdAt: v.number(),
-  }).index("by_email", ["email"]),
+  }).index('by_email', ['email']),
 
   sessions: defineTable({
-    userId: v.id("users"),
+    userId: v.id('users'),
     token: v.string(),
     createdAt: v.number(),
-  }).index("by_token", ["token"]),
+  }).index('by_token', ['token']),
 });

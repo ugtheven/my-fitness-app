@@ -1,7 +1,7 @@
 const toHex = (buf: Uint8Array): string =>
   Array.from(buf)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
 
 const fromHex = (hex: string): Uint8Array =>
   new Uint8Array(hex.match(/.{2}/g)!.map((b) => parseInt(b, 16)));
@@ -19,41 +19,38 @@ export async function hashPassword(password: string): Promise<string> {
   crypto.getRandomValues(saltBytes);
 
   const key = await crypto.subtle.importKey(
-    "raw",
+    'raw',
     new TextEncoder().encode(password),
-    "PBKDF2",
+    'PBKDF2',
     false,
-    ["deriveBits"]
+    ['deriveBits'],
   );
 
   const hash = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", salt: toArrayBuffer(saltBytes), iterations: 100_000, hash: "SHA-256" },
+    { name: 'PBKDF2', salt: toArrayBuffer(saltBytes), iterations: 100_000, hash: 'SHA-256' },
     key,
-    256
+    256,
   );
 
   return `pbkdf2:${toHex(saltBytes)}:${toHex(new Uint8Array(hash))}`;
 }
 
-export async function verifyPassword(
-  password: string,
-  stored: string
-): Promise<boolean> {
-  const [, saltHex, expectedHex] = stored.split(":");
+export async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  const [, saltHex, expectedHex] = stored.split(':');
   const saltBytes = fromHex(saltHex);
 
   const key = await crypto.subtle.importKey(
-    "raw",
+    'raw',
     new TextEncoder().encode(password),
-    "PBKDF2",
+    'PBKDF2',
     false,
-    ["deriveBits"]
+    ['deriveBits'],
   );
 
   const hash = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", salt: toArrayBuffer(saltBytes), iterations: 100_000, hash: "SHA-256" },
+    { name: 'PBKDF2', salt: toArrayBuffer(saltBytes), iterations: 100_000, hash: 'SHA-256' },
     key,
-    256
+    256,
   );
 
   return toHex(new Uint8Array(hash)) === expectedHex;

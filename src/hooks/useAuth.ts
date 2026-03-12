@@ -1,9 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useQuery } from "convex/react";
-import { useCallback, useEffect, useState } from "react";
-import { api } from "../../convex/_generated/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQuery } from 'convex/react';
+import { useCallback, useEffect, useState } from 'react';
+import { api } from '../../convex/_generated/api';
 
-const TOKEN_KEY = "session_token";
+const TOKEN_KEY = 'session_token';
 
 export function useAuth() {
   const [token, setToken] = useState<string | null | undefined>(undefined);
@@ -14,10 +14,7 @@ export function useAuth() {
       .catch(() => setToken(null));
   }, []);
 
-  const user = useQuery(
-    api.queries.user.getCurrentUser,
-    token ? { token } : "skip"
-  );
+  const user = useQuery(api.queries.user.getCurrentUser, token ? { token } : 'skip');
 
   const saveToken = useCallback(async (newToken: string) => {
     await AsyncStorage.setItem(TOKEN_KEY, newToken);
