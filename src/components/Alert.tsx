@@ -21,8 +21,14 @@ export function Alert({ title, content, color }: AlertProps) {
 
   return (
     <View className={`w-full rounded-lg border p-3 ${backgroundColor[color]}`}>
-      {title ? <Text className={`text-sm font-semibold ${textColor[color]}`}>{title}</Text> : null}
-      {content ? <Text className={`text-sm ${textColor[color]}`}>{content}</Text> : null}
+      {title ? (
+        <Text className={`text-sm font-semibold ${textColor[color]}`}>
+          {title}
+        </Text>
+      ) : null}
+      {content ? (
+        <Text className={`text-sm ${textColor[color]}`}>{content}</Text>
+      ) : null}
     </View>
   );
 }

@@ -3,10 +3,12 @@ import './global.css';
 import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import { StatusBar } from 'expo-status-bar';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { AuthScreen } from './src/screens/AuthScreen';
 import { useAuth } from './src/hooks/useAuth';
+import { AuthScreen } from './src/screens/AuthScreen';
 
-const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!);
+const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
+if (!convexUrl) throw new Error('EXPO_PUBLIC_CONVEX_URL is not set');
+const convex = new ConvexReactClient(convexUrl);
 
 function Root() {
   const { isLoading, isAuthenticated, saveToken, signOut } = useAuth();

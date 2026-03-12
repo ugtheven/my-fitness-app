@@ -1,7 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
 import type { ReactNode } from 'react';
-import { Text, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import {
+  Text,
+  TextInput,
+  type TextInputProps,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 type SimpleInputProps = TextInputProps & {
   label?: string;
@@ -20,7 +26,11 @@ export function SimpleInput({
 
   return (
     <View className="w-full gap-1">
-      {label ? <Text className="mb-1 text-sm font-semibold text-text-muted">{label}</Text> : null}
+      {label ? (
+        <Text className="mb-1 text-sm font-semibold text-text-muted">
+          {label}
+        </Text>
+      ) : null}
 
       <View
         className={[
@@ -46,7 +56,9 @@ export function SimpleInput({
         ) : null}
       </View>
 
-      {error ? <Text className="mt-1 text-xs text-accent-danger">{error}</Text> : null}
+      {error ? (
+        <Text className="mt-1 text-xs text-accent-danger">{error}</Text>
+      ) : null}
     </View>
   );
 }

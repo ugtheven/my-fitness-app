@@ -1,10 +1,10 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { useMemo, type ReactNode } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import {
   ActivityIndicator,
   Text,
   TouchableOpacity,
-  TouchableOpacityProps,
+  type TouchableOpacityProps,
   View,
 } from 'react-native';
 
@@ -35,7 +35,9 @@ export function Button({
     return (
       <>
         {startIcon ? <View className="mr-2">{startIcon}</View> : null}
-        <Text className={`text-base font-semibold ${isGhost ? 'text-text-muted' : 'text-text'}`}>
+        <Text
+          className={`text-base font-semibold ${isGhost ? 'text-text-muted' : 'text-text'}`}
+        >
           {label}
         </Text>
         {endIcon ? <View className="ml-2">{endIcon}</View> : null}

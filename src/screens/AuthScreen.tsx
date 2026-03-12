@@ -1,11 +1,11 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useMutation } from 'convex/react';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { api } from '../../convex/_generated/api';
-import { SimpleInput } from '@/components/SimpleInput';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { Button } from '@/components/Button';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { Alert } from '@/components/Alert';
+import { Button } from '@/components/Button';
+import { SimpleInput } from '@/components/SimpleInput';
+import { api } from '../../convex/_generated/api';
 
 type Props = {
   onAuth: (token: string) => void;
@@ -17,8 +17,6 @@ export function AuthScreen({ onAuth }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -63,8 +61,8 @@ export function AuthScreen({ onAuth }: Props) {
         });
         onAuth(token);
       }
-    } catch (e: any) {
-      setError(e.message ?? 'Une erreur est survenue.');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Une erreur est survenue.');
     } finally {
       setLoading(false);
     }
@@ -104,7 +102,13 @@ export function AuthScreen({ onAuth }: Props) {
       {mode === 'signIn' && (
         <>
           <SimpleInput
-            startIcon={<Ionicons name="mail-outline" size={16} className="text-text-muted" />}
+            startIcon={
+              <Ionicons
+                name="mail-outline"
+                size={16}
+                className="text-text-muted"
+              />
+            }
             label="Email"
             value={email}
             onChangeText={setEmail}
@@ -113,10 +117,14 @@ export function AuthScreen({ onAuth }: Props) {
           <SimpleInput
             label="Password"
             startIcon={
-              <Ionicons name="lock-closed-outline" size={16} className="text-text-muted" />
+              <Ionicons
+                name="lock-closed-outline"
+                size={16}
+                className="text-text-muted"
+              />
             }
             value={password}
-            secureTextEntry={!showPassword}
+            secureTextEntry
             onChangeText={setPassword}
             placeholder="Password"
           />
@@ -127,14 +135,26 @@ export function AuthScreen({ onAuth }: Props) {
         <>
           <SimpleInput
             label="Name"
-            startIcon={<Ionicons name="person-outline" size={16} className="text-text-muted" />}
+            startIcon={
+              <Ionicons
+                name="person-outline"
+                size={16}
+                className="text-text-muted"
+              />
+            }
             value={name}
             onChangeText={setName}
             placeholder="Your name"
           />
           <SimpleInput
             label="Email"
-            startIcon={<Ionicons name="mail-outline" size={16} className="text-text-muted" />}
+            startIcon={
+              <Ionicons
+                name="mail-outline"
+                size={16}
+                className="text-text-muted"
+              />
+            }
             value={email}
             onChangeText={setEmail}
             placeholder="you@example.com"
@@ -142,20 +162,28 @@ export function AuthScreen({ onAuth }: Props) {
           <SimpleInput
             label="Password"
             startIcon={
-              <Ionicons name="lock-closed-outline" size={16} className="text-text-muted" />
+              <Ionicons
+                name="lock-closed-outline"
+                size={16}
+                className="text-text-muted"
+              />
             }
             value={password}
-            secureTextEntry={!showPassword}
+            secureTextEntry
             onChangeText={setPassword}
             placeholder="Password"
           />
           <SimpleInput
             label="Confirm password"
             startIcon={
-              <Ionicons name="lock-closed-outline" size={16} className="text-text-muted" />
+              <Ionicons
+                name="lock-closed-outline"
+                size={16}
+                className="text-text-muted"
+              />
             }
             value={confirmPassword}
-            secureTextEntry={!showConfirmPassword}
+            secureTextEntry
             onChangeText={setConfirmPassword}
             placeholder="Confirm password"
           />
@@ -165,7 +193,13 @@ export function AuthScreen({ onAuth }: Props) {
       {error && <Alert title={error} color="error" />}
       <Button
         loading={loading}
-        endIcon={<Ionicons name="arrow-forward-outline" size={16} className="text-text" />}
+        endIcon={
+          <Ionicons
+            name="arrow-forward-outline"
+            size={16}
+            className="text-text"
+          />
+        }
         label={mode === 'signIn' ? 'Sign in' : 'Sign up'}
         onPress={handle}
       />

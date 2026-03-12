@@ -14,7 +14,10 @@ export function useAuth() {
       .catch(() => setToken(null));
   }, []);
 
-  const user = useQuery(api.queries.user.getCurrentUser, token ? { token } : 'skip');
+  const user = useQuery(
+    api.queries.user.getCurrentUser,
+    token ? { token } : 'skip',
+  );
 
   const saveToken = useCallback(async (newToken: string) => {
     await AsyncStorage.setItem(TOKEN_KEY, newToken);
