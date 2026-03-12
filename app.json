@@ -2,6 +2,7 @@
   "expo": {
     "name": "my-fitness-app",
     "slug": "my-fitness-app",
+    "scheme": "myfitnessapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
@@ -17,6 +18,7 @@
     },
     "web": {
       "bundler": "metro"
-    }
+    },
+    "plugins": ["expo-router"]
   }
 }
