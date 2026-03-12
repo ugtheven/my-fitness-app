@@ -3,18 +3,18 @@ import { mutation } from '../_generated/server';
 import { generateSessionToken, hashPassword, verifyPassword } from '../auth';
 
 export const signUp = mutation({
-  args: { fullName: v.string(), email: v.string(), password: v.string() },
-  handler: async (ctx, { fullName, email, password }) => {
+  args: { name: v.string(), email: v.string(), password: v.string() },
+  handler: async (ctx, { name, email, password }) => {
     const existing = await ctx.db
       .query('users')
       .withIndex('by_email', (q) => q.eq('email', email))
       .unique();
 
-    if (existing) throw new Error('Cet email est déjà utilisé.');
+    if (existing) throw new Error('This email is already used.');
 
     const passwordHash = await hashPassword(password);
     const userId = await ctx.db.insert('users', {
-      fullName,
+      name,
       email,
       passwordHash,
       createdAt: Date.now(),
@@ -35,10 +35,10 @@ export const signIn = mutation({
       .withIndex('by_email', (q) => q.eq('email', email))
       .unique();
 
-    if (!user) throw new Error('Email ou mot de passe incorrect.');
+    if (!user) throw new Error('Email or password is incorrect.');
 
     const valid = await verifyPassword(password, user.passwordHash);
-    if (!valid) throw new Error('Email ou mot de passe incorrect.');
+    if (!valid) throw new Error('Email or password is incorrect.');
 
     const token = generateSessionToken();
     await ctx.db.insert('sessions', {

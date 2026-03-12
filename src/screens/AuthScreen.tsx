@@ -2,6 +2,10 @@ import { useMutation } from 'convex/react';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { api } from '../../convex/_generated/api';
+import { SimpleInput } from '@/components/SimpleInput';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Button } from '@/components/Button';
+import { Alert } from '@/components/Alert';
 
 type Props = {
   onAuth: (token: string) => void;
@@ -9,7 +13,7 @@ type Props = {
 
 export function AuthScreen({ onAuth }: Props) {
   const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
-  const [fullName, setFullName] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -23,7 +27,7 @@ export function AuthScreen({ onAuth }: Props) {
 
   const handle = useCallback(async () => {
     const normalizedEmail = email.trim();
-    const normalizedFullName = fullName.trim();
+    const normalizedName = name.trim();
 
     if (!normalizedEmail || !password) {
       setError('Merci de remplir email et mot de passe.');
@@ -31,16 +35,16 @@ export function AuthScreen({ onAuth }: Props) {
     }
 
     if (mode === 'signUp') {
-      if (!normalizedFullName) {
-        setError('Le nom complet est requis.');
+      if (!normalizedName) {
+        setError('Name is required.');
         return;
       }
       if (!confirmPassword) {
-        setError('Merci de confirmer le mot de passe.');
+        setError('Please confirm the password.');
         return;
       }
       if (password !== confirmPassword) {
-        setError('Les mots de passe ne correspondent pas.');
+        setError('Passwords do not match.');
         return;
       }
     }
@@ -53,7 +57,7 @@ export function AuthScreen({ onAuth }: Props) {
         onAuth(token);
       } else {
         const { token } = await signUp({
-          fullName: normalizedFullName,
+          name: normalizedName,
           email: normalizedEmail,
           password,
         });
@@ -64,103 +68,107 @@ export function AuthScreen({ onAuth }: Props) {
     } finally {
       setLoading(false);
     }
-  }, [confirmPassword, email, fullName, mode, onAuth, password, signIn, signUp]);
+  }, [confirmPassword, email, name, mode, onAuth, password, signIn, signUp]);
 
   return (
-    <View className="flex-1 items-center justify-center bg-black px-6">
-      <View className="mb-4 w-full flex-row rounded-lg border border-neutral-800 p-1">
+    <View className="flex-1 items-center justify-center gap-4 bg-black px-6">
+      <View className="w-full flex-row rounded-xl border bg-background-paper p-1.5">
         <TouchableOpacity
-          className={`flex-1 items-center rounded-md py-2.5 ${mode === 'signIn' ? 'bg-white' : ''}`}
+          className={`flex-1 items-center rounded-xl py-3 ${mode === 'signIn' ? 'bg-accent/15' : ''}`}
           onPress={() => {
             setMode('signIn');
             setError('');
           }}
         >
-          <Text className={`${mode === 'signIn' ? 'text-black' : 'text-white'} font-semibold`}>
-            Connexion
+          <Text
+            className={`${mode === 'signIn' ? 'text-accent' : 'text-text-muted'} text-base font-medium`}
+          >
+            Sign in
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className={`flex-1 items-center rounded-md py-2.5 ${mode === 'signUp' ? 'bg-white' : ''}`}
+          className={`flex-1 items-center rounded-xl py-3 ${mode === 'signUp' ? 'bg-accent/15' : ''}`}
           onPress={() => {
             setMode('signUp');
             setError('');
           }}
         >
-          <Text className={`${mode === 'signUp' ? 'text-black' : 'text-white'} font-semibold`}>
-            Inscription
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {mode === 'signUp' ? (
-        <TextInput
-          className="mb-3 w-full rounded-lg border border-neutral-800 px-4 py-3 text-base text-white"
-          placeholder="Nom complet"
-          placeholderTextColor="#555"
-          value={fullName}
-          onChangeText={setFullName}
-        />
-      ) : null}
-
-      <TextInput
-        className="mb-3 w-full rounded-lg border border-neutral-800 px-4 py-3 text-base text-white"
-        placeholder="Email"
-        placeholderTextColor="#555"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-
-      <View className="mb-3 w-full flex-row items-center rounded-lg border border-neutral-800">
-        <TextInput
-          className="flex-1 px-4 py-3 text-base text-white"
-          placeholder="Mot de passe"
-          placeholderTextColor="#555"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-        />
-        <TouchableOpacity className="px-4 py-3" onPress={() => setShowPassword((prev) => !prev)}>
-          <Text className="text-xs text-neutral-400">{showPassword ? 'Masquer' : 'Afficher'}</Text>
-        </TouchableOpacity>
-      </View>
-
-      {mode === 'signUp' ? (
-        <View className="mb-3 w-full flex-row items-center rounded-lg border border-neutral-800">
-          <TextInput
-            className="flex-1 px-4 py-3 text-base text-white"
-            placeholder="Confirmer le mot de passe"
-            placeholderTextColor="#555"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry={!showConfirmPassword}
-          />
-          <TouchableOpacity
-            className="px-4 py-3"
-            onPress={() => setShowConfirmPassword((prev) => !prev)}
+          <Text
+            className={`${mode === 'signUp' ? 'text-accent' : 'text-text-muted'} text-base font-medium`}
           >
-            <Text className="text-xs text-neutral-400">
-              {showConfirmPassword ? 'Masquer' : 'Afficher'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      ) : null}
-
-      {error ? <Text className="mb-3 text-center text-sm text-red-500">{error}</Text> : null}
-      {loading ? (
-        <ActivityIndicator color="#fff" className="mt-3" />
-      ) : (
-        <TouchableOpacity
-          className="w-full items-center rounded-lg bg-white py-3.5"
-          onPress={handle}
-        >
-          <Text className="text-base font-semibold text-black">
-            {mode === 'signIn' ? 'Se connecter' : "S'inscrire"}
+            Sign up
           </Text>
         </TouchableOpacity>
+      </View>
+
+      {mode === 'signIn' && (
+        <>
+          <SimpleInput
+            startIcon={<Ionicons name="mail-outline" size={16} className="text-text-muted" />}
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="you@example.com"
+          />
+          <SimpleInput
+            label="Password"
+            startIcon={
+              <Ionicons name="lock-closed-outline" size={16} className="text-text-muted" />
+            }
+            value={password}
+            secureTextEntry={!showPassword}
+            onChangeText={setPassword}
+            placeholder="Password"
+          />
+        </>
       )}
+
+      {mode === 'signUp' && (
+        <>
+          <SimpleInput
+            label="Name"
+            startIcon={<Ionicons name="person-outline" size={16} className="text-text-muted" />}
+            value={name}
+            onChangeText={setName}
+            placeholder="Your name"
+          />
+          <SimpleInput
+            label="Email"
+            startIcon={<Ionicons name="mail-outline" size={16} className="text-text-muted" />}
+            value={email}
+            onChangeText={setEmail}
+            placeholder="you@example.com"
+          />
+          <SimpleInput
+            label="Password"
+            startIcon={
+              <Ionicons name="lock-closed-outline" size={16} className="text-text-muted" />
+            }
+            value={password}
+            secureTextEntry={!showPassword}
+            onChangeText={setPassword}
+            placeholder="Password"
+          />
+          <SimpleInput
+            label="Confirm password"
+            startIcon={
+              <Ionicons name="lock-closed-outline" size={16} className="text-text-muted" />
+            }
+            value={confirmPassword}
+            secureTextEntry={!showConfirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholder="Confirm password"
+          />
+        </>
+      )}
+
+      {error && <Alert title={error} color="error" />}
+      <Button
+        loading={loading}
+        endIcon={<Ionicons name="arrow-forward-outline" size={16} className="text-text" />}
+        label={mode === 'signIn' ? 'Sign in' : 'Sign up'}
+        onPress={handle}
+      />
     </View>
   );
 }

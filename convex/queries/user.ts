@@ -16,7 +16,7 @@ export const getCurrentUser = query({
 
     return {
       _id: user._id,
-      fullName: user.fullName,
+      name: user.name,
       email: user.email,
       createdAt: user.createdAt,
     };
