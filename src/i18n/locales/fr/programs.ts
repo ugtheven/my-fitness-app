@@ -1,5 +1,5 @@
 export default {
   title: {
-    greeting: 'Hey, {{name}} 👋',
+    programs: 'Programmes',
   },
 } as const;
