@@ -1,5 +1,6 @@
 import { useMutation } from 'convex/react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Alert } from '@/components/Alert';
 import { Button } from '@/components/Button';
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export function AuthScreen({ onAuth }: Props) {
+  const { t } = useTranslation('auth');
   const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -28,21 +30,21 @@ export function AuthScreen({ onAuth }: Props) {
     const normalizedName = name.trim();
 
     if (!normalizedEmail || !password) {
-      setError('Merci de remplir email et mot de passe.');
+      setError(t('error.emailAndPassword'));
       return;
     }
 
     if (mode === 'signUp') {
       if (!normalizedName) {
-        setError('Name is required.');
+        setError(t('error.nameRequired'));
         return;
       }
       if (!confirmPassword) {
-        setError('Please confirm the password.');
+        setError(t('error.confirmPasswordRequired'));
         return;
       }
       if (password !== confirmPassword) {
-        setError('Passwords do not match.');
+        setError(t('error.passwordMismatch'));
         return;
       }
     }
@@ -62,11 +64,11 @@ export function AuthScreen({ onAuth }: Props) {
         onAuth(token);
       }
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Une erreur est survenue.');
+      setError(e instanceof Error ? e.message : t('error.generic'));
     } finally {
       setLoading(false);
     }
-  }, [confirmPassword, email, name, mode, onAuth, password, signIn, signUp]);
+  }, [confirmPassword, email, name, mode, onAuth, password, signIn, signUp, t]);
 
   return (
     <View className="flex-1 items-center justify-center gap-4 bg-black px-6">
@@ -81,7 +83,7 @@ export function AuthScreen({ onAuth }: Props) {
           <Text
             className={`${mode === 'signIn' ? 'text-accent' : 'text-text-muted'} text-base font-medium`}
           >
-            Sign in
+            {t('button.signIn')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -94,7 +96,7 @@ export function AuthScreen({ onAuth }: Props) {
           <Text
             className={`${mode === 'signUp' ? 'text-accent' : 'text-text-muted'} text-base font-medium`}
           >
-            Sign up
+            {t('button.signUp')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -109,13 +111,13 @@ export function AuthScreen({ onAuth }: Props) {
                 className="text-text-muted"
               />
             }
-            label="Email"
+            label={t('input.email.label')}
             value={email}
             onChangeText={setEmail}
-            placeholder="you@example.com"
+            placeholder={t('input.email.placeholder')}
           />
           <SimpleInput
-            label="Password"
+            label={t('input.password.label')}
             startIcon={
               <Ionicons
                 name="lock-closed-outline"
@@ -126,7 +128,7 @@ export function AuthScreen({ onAuth }: Props) {
             value={password}
             secureTextEntry
             onChangeText={setPassword}
-            placeholder="Password"
+            placeholder={t('input.password.placeholder')}
           />
         </>
       )}
@@ -134,7 +136,7 @@ export function AuthScreen({ onAuth }: Props) {
       {mode === 'signUp' && (
         <>
           <SimpleInput
-            label="Name"
+            label={t('input.name.label')}
             startIcon={
               <Ionicons
                 name="person-outline"
@@ -144,10 +146,10 @@ export function AuthScreen({ onAuth }: Props) {
             }
             value={name}
             onChangeText={setName}
-            placeholder="Your name"
+            placeholder={t('input.name.placeholder')}
           />
           <SimpleInput
-            label="Email"
+            label={t('input.email.label')}
             startIcon={
               <Ionicons
                 name="mail-outline"
@@ -157,10 +159,10 @@ export function AuthScreen({ onAuth }: Props) {
             }
             value={email}
             onChangeText={setEmail}
-            placeholder="you@example.com"
+            placeholder={t('input.email.placeholder')}
           />
           <SimpleInput
-            label="Password"
+            label={t('input.password.label')}
             startIcon={
               <Ionicons
                 name="lock-closed-outline"
@@ -171,10 +173,10 @@ export function AuthScreen({ onAuth }: Props) {
             value={password}
             secureTextEntry
             onChangeText={setPassword}
-            placeholder="Password"
+            placeholder={t('input.password.placeholder')}
           />
           <SimpleInput
-            label="Confirm password"
+            label={t('input.confirmPassword.label')}
             startIcon={
               <Ionicons
                 name="lock-closed-outline"
@@ -185,12 +187,12 @@ export function AuthScreen({ onAuth }: Props) {
             value={confirmPassword}
             secureTextEntry
             onChangeText={setConfirmPassword}
-            placeholder="Confirm password"
+            placeholder={t('input.confirmPassword.placeholder')}
           />
         </>
       )}
 
-      {error && <Alert title={error} color="error" />}
+      {error ? <Alert title={error} color="error" /> : null}
       <Button
         loading={loading}
         endIcon={
@@ -200,7 +202,7 @@ export function AuthScreen({ onAuth }: Props) {
             className="text-text"
           />
         }
-        label={mode === 'signIn' ? 'Sign in' : 'Sign up'}
+        label={mode === 'signIn' ? t('button.signIn') : t('button.signUp')}
         onPress={handle}
       />
     </View>

@@ -1,4 +1,5 @@
 import '../global.css';
+import '@/i18n';
 
 import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import { Slot } from 'expo-router';
