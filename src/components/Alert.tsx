@@ -1,34 +1,52 @@
-import { Text, View } from 'react-native';
+import { Text, YStack } from 'tamagui';
+import { colors } from '@/lib/theme';
 
 type AlertProps = {
   title: string;
   content?: string;
-  color: 'success' | 'warning' | 'error';
+  variant: 'success' | 'warning' | 'error';
 };
 
-export function Alert({ title, content, color }: AlertProps) {
-  const backgroundColor = {
-    success: 'bg-success/15',
-    warning: 'bg-warning/15',
-    error: 'bg-accent-danger/15',
-  };
+const variants = {
+  success: {
+    bg: `${colors.success}26`,
+    text: colors.success,
+    border: `${colors.success}4d`,
+  },
+  warning: {
+    bg: `${colors.warning}26`,
+    text: colors.warning,
+    border: `${colors.warning}4d`,
+  },
+  error: {
+    bg: `${colors.accentDanger}26`,
+    text: colors.accentDanger,
+    border: `${colors.accentDanger}4d`,
+  },
+};
 
-  const textColor = {
-    success: 'text-success',
-    warning: 'text-warning',
-    error: 'text-accent-danger',
-  };
+export function Alert({ title, content, variant }: AlertProps) {
+  const { bg, text, border } = variants[variant];
 
   return (
-    <View className={`w-full rounded-lg border p-3 ${backgroundColor[color]}`}>
+    <YStack
+      width="100%"
+      rounded={12}
+      borderWidth={1}
+      p={12}
+      gap={4}
+      style={{ borderColor: border, backgroundColor: bg }}
+    >
       {title ? (
-        <Text className={`text-sm font-semibold ${textColor[color]}`}>
+        <Text fontSize={14} fontWeight="600" color={text}>
           {title}
         </Text>
       ) : null}
       {content ? (
-        <Text className={`text-sm ${textColor[color]}`}>{content}</Text>
+        <Text fontSize={14} color={text}>
+          {content}
+        </Text>
       ) : null}
-    </View>
+    </YStack>
   );
 }

@@ -1,37 +1,49 @@
 import { useTranslation } from 'react-i18next';
-import { Switch, Text, View } from 'react-native';
+import { Switch } from 'react-native';
+import { Text, XStack, YStack } from 'tamagui';
 import { Button } from '@/components/Button';
 import { useAuthContext } from '@/context/auth';
+import { colors } from '@/lib/theme';
 
 export function ProfileScreen() {
   const { t, i18n } = useTranslation('profile');
   const { signOut } = useAuthContext();
 
   return (
-    <View className="flex-1 bg-background px-6 pt-16">
-      <Text className="mb-8 text-3xl font-bold text-text">
+    <YStack
+      flex={1}
+      style={{ backgroundColor: colors.background }}
+      px={24}
+      pt={64}
+      gap={24}
+    >
+      <Text fontSize={30} fontWeight="700" color={colors.text}>
         {t('title.profile')}
       </Text>
 
-      <View className="flex-row items-center justify-between">
-        <Text className="text-base font-medium text-text">
+      <XStack items="center" justify="space-between">
+        <Text fontSize={16} fontWeight="500" color={colors.text}>
           {t('label.language')}
         </Text>
-        <View className="flex-row items-center gap-3">
-          <Text className="text-sm text-text-muted">EN</Text>
+        <XStack items="center" gap={12}>
+          <Text fontSize={14} color={colors.textMuted}>
+            EN
+          </Text>
           <Switch
             value={i18n.language === 'fr'}
             onValueChange={(val) => void i18n.changeLanguage(val ? 'fr' : 'en')}
-            trackColor={{ false: '#3a3a3a', true: '#22c55e' }}
-            thumbColor="#ffffff"
+            trackColor={{ false: '#3a3a3a', true: colors.accent }}
+            thumbColor={colors.text}
           />
-          <Text className="text-sm text-text-muted">FR</Text>
-        </View>
-      </View>
+          <Text fontSize={14} color={colors.textMuted}>
+            FR
+          </Text>
+        </XStack>
+      </XStack>
 
-      <View className="mt-auto pb-32">
+      <YStack flex={1} justify="flex-end" pb={128}>
         <Button variant="ghost" label={t('button.signOut')} onPress={signOut} />
-      </View>
-    </View>
+      </YStack>
+    </YStack>
   );
 }

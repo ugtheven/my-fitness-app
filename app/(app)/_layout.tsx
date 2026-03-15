@@ -1,5 +1,5 @@
 import { Redirect, Slot } from 'expo-router';
-import { View } from 'react-native';
+import { YStack } from 'tamagui';
 import { Navbar } from '@/components/Navbar';
 import { useAuthContext } from '@/context/auth';
 
@@ -14,9 +14,9 @@ export default function AppLayout() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <YStack flex={1}>
       <Slot />
       <Navbar />
-    </View>
+    </YStack>
   );
 }

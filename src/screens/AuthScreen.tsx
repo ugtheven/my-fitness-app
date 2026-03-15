@@ -1,11 +1,14 @@
 import { useMutation } from 'convex/react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native';
+import { Text, YStack } from 'tamagui';
 import { Alert } from '@/components/Alert';
 import { Button } from '@/components/Button';
-import { SimpleInput } from '@/components/SimpleInput';
+import { TabSelector } from '@/components/TabSelector';
+import { Textfield } from '@/components/Textfield';
 import { Ionicons } from '@/lib/icons';
+import { colors } from '@/lib/theme';
 import { api } from '../../convex/_generated/api';
 
 type Props = {
@@ -14,7 +17,7 @@ type Props = {
 
 export function AuthScreen({ onAuth }: Props) {
   const { t } = useTranslation('auth');
-  const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
+  const [mode, setMode] = useState('signIn');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +36,6 @@ export function AuthScreen({ onAuth }: Props) {
       setError(t('error.emailAndPassword'));
       return;
     }
-
     if (mode === 'signUp') {
       if (!normalizedName) {
         setError(t('error.nameRequired'));
@@ -71,140 +73,151 @@ export function AuthScreen({ onAuth }: Props) {
   }, [confirmPassword, email, name, mode, onAuth, password, signIn, signUp, t]);
 
   return (
-    <View className="flex-1 items-center justify-center gap-4 bg-black px-6">
-      <View className="w-full flex-row rounded-xl border bg-background-paper p-1.5">
-        <TouchableOpacity
-          className={`flex-1 items-center rounded-xl py-3 ${mode === 'signIn' ? 'bg-accent/15' : ''}`}
-          onPress={() => {
-            setMode('signIn');
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+        paddingVertical: 32,
+        gap: 16,
+      }}
+      keyboardShouldPersistTaps="handled"
+    >
+      <YStack height="100%" items="flex-start" gap={16}>
+        <YStack
+          height={260}
+          width="100%"
+          items="center"
+          justify="center"
+          gap={16}
+        >
+          <Text fontSize={32} fontWeight="700" color={colors.text}>
+            FitTracker
+          </Text>
+          <Text fontSize={20} fontWeight="400" color={colors.textMuted}>
+            Your fitness journey starts here
+          </Text>
+        </YStack>
+        <TabSelector
+          options={[
+            { value: 'signIn', label: t('button.signIn') },
+            { value: 'signUp', label: t('button.signUp') },
+          ]}
+          value={mode}
+          onChange={(val) => {
+            setMode(val);
             setError('');
           }}
-        >
-          <Text
-            className={`${mode === 'signIn' ? 'text-accent' : 'text-text-muted'} text-base font-medium`}
-          >
-            {t('button.signIn')}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className={`flex-1 items-center rounded-xl py-3 ${mode === 'signUp' ? 'bg-accent/15' : ''}`}
-          onPress={() => {
-            setMode('signUp');
-            setError('');
-          }}
-        >
-          <Text
-            className={`${mode === 'signUp' ? 'text-accent' : 'text-text-muted'} text-base font-medium`}
-          >
-            {t('button.signUp')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+        />
 
-      {mode === 'signIn' && (
-        <>
-          <SimpleInput
-            startIcon={
-              <Ionicons
-                name="mail-outline"
-                size={16}
-                className="text-text-muted"
-              />
-            }
-            label={t('input.email.label')}
-            value={email}
-            onChangeText={setEmail}
-            placeholder={t('input.email.placeholder')}
-          />
-          <SimpleInput
-            label={t('input.password.label')}
-            startIcon={
-              <Ionicons
-                name="lock-closed-outline"
-                size={16}
-                className="text-text-muted"
-              />
-            }
-            value={password}
-            secureTextEntry
-            onChangeText={setPassword}
-            placeholder={t('input.password.placeholder')}
-          />
-        </>
-      )}
+        {mode === 'signIn' && (
+          <>
+            <Textfield
+              startIcon={
+                <Ionicons
+                  name="mail-outline"
+                  size={16}
+                  color={colors.textMuted}
+                />
+              }
+              label={t('input.email.label')}
+              value={email}
+              onChangeText={setEmail}
+              placeholder={t('input.email.placeholder')}
+            />
+            <Textfield
+              label={t('input.password.label')}
+              startIcon={
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={16}
+                  color={colors.textMuted}
+                />
+              }
+              value={password}
+              secureTextEntry
+              onChangeText={setPassword}
+              placeholder={t('input.password.placeholder')}
+            />
+          </>
+        )}
 
-      {mode === 'signUp' && (
-        <>
-          <SimpleInput
-            label={t('input.name.label')}
-            startIcon={
-              <Ionicons
-                name="person-outline"
-                size={16}
-                className="text-text-muted"
-              />
-            }
-            value={name}
-            onChangeText={setName}
-            placeholder={t('input.name.placeholder')}
-          />
-          <SimpleInput
-            label={t('input.email.label')}
-            startIcon={
-              <Ionicons
-                name="mail-outline"
-                size={16}
-                className="text-text-muted"
-              />
-            }
-            value={email}
-            onChangeText={setEmail}
-            placeholder={t('input.email.placeholder')}
-          />
-          <SimpleInput
-            label={t('input.password.label')}
-            startIcon={
-              <Ionicons
-                name="lock-closed-outline"
-                size={16}
-                className="text-text-muted"
-              />
-            }
-            value={password}
-            secureTextEntry
-            onChangeText={setPassword}
-            placeholder={t('input.password.placeholder')}
-          />
-          <SimpleInput
-            label={t('input.confirmPassword.label')}
-            startIcon={
-              <Ionicons
-                name="lock-closed-outline"
-                size={16}
-                className="text-text-muted"
-              />
-            }
-            value={confirmPassword}
-            secureTextEntry
-            onChangeText={setConfirmPassword}
-            placeholder={t('input.confirmPassword.placeholder')}
-          />
-        </>
-      )}
+        {mode === 'signUp' && (
+          <>
+            <Textfield
+              label={t('input.name.label')}
+              startIcon={
+                <Ionicons
+                  name="person-outline"
+                  size={16}
+                  color={colors.textMuted}
+                />
+              }
+              value={name}
+              onChangeText={setName}
+              placeholder={t('input.name.placeholder')}
+            />
+            <Textfield
+              label={t('input.email.label')}
+              startIcon={
+                <Ionicons
+                  name="mail-outline"
+                  size={16}
+                  color={colors.textMuted}
+                />
+              }
+              value={email}
+              onChangeText={setEmail}
+              placeholder={t('input.email.placeholder')}
+            />
+            <Textfield
+              label={t('input.password.label')}
+              startIcon={
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={16}
+                  color={colors.textMuted}
+                />
+              }
+              value={password}
+              secureTextEntry
+              onChangeText={setPassword}
+              placeholder={t('input.password.placeholder')}
+            />
+            <Textfield
+              label={t('input.confirmPassword.label')}
+              startIcon={
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={16}
+                  color={colors.textMuted}
+                />
+              }
+              value={confirmPassword}
+              secureTextEntry
+              onChangeText={setConfirmPassword}
+              placeholder={t('input.confirmPassword.placeholder')}
+            />
+          </>
+        )}
 
-      {error ? <Alert title={error} color="error" /> : null}
-      <Button
-        loading={loading}
-        endIcon={
-          <Ionicons
-            name="arrow-forward-outline"
-            size={16}
-            className="text-text"
+        {error ? <Alert title={error} variant="error" /> : null}
+        <YStack width="100%">
+          <Button
+            loading={loading}
+            endIcon={
+              <Ionicons
+                name="arrow-forward-outline"
+                size={16}
+                color={colors.text}
+              />
+            }
+            label={mode === 'signIn' ? t('button.signIn') : t('button.signUp')}
+            onPress={handle}
           />
-        }
-        label={mode === 'signIn' ? t('button.signIn') : t('button.signUp')}
-        onPress={handle}
-      />
-    </View>
+        </YStack>
+      </YStack>
+    </ScrollView>
   );
 }

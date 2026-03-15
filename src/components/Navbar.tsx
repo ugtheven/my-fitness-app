@@ -1,9 +1,11 @@
 import { usePathname, useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, XStack, YStack } from 'tamagui';
 import { Ionicons } from '@/lib/icons';
+import { colors } from '@/lib/theme';
 
 type NavItemConfig = {
   path: string;
@@ -46,43 +48,55 @@ export function Navbar() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  const activeIndex = useMemo(() => {
-    return NavItems.findIndex((item) => item.path === pathname);
-  }, [pathname]);
+  const activeIndex = useMemo(
+    () => NavItems.findIndex((item) => item.path === pathname),
+    [pathname],
+  );
 
   return (
-    <View
-      className="absolute left-5 right-5"
-      style={{ bottom: Math.max(insets.bottom, 8) + 12 }}
+    <YStack
+      position="absolute"
+      l={20}
+      r={20}
+      b={Math.max(insets.bottom, 8) + 12}
       pointerEvents="box-none"
     >
-      <View className="overflow-hidden rounded-[40px] bg-background-paper">
-        <View className="flex-row px-2 py-2.5">
+      <YStack
+        overflow="hidden"
+        rounded={40}
+        style={{ backgroundColor: colors.backgroundPaper }}
+      >
+        <XStack px={8} py={8}>
           {NavItems.map((item, index) => {
             const isActive = index === activeIndex;
             return (
               <TouchableOpacity
                 key={item.path}
-                className="flex-1 items-center justify-center gap-1 py-1"
                 onPress={() => router.replace(item.path as never)}
                 activeOpacity={0.75}
                 hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
+                style={{ flex: 1 }}
               >
-                <Ionicons
-                  name={isActive ? item.activeIcon : item.icon}
-                  size={22}
-                  className={`${isActive ? 'text-accent' : 'text-text-muted'}`}
-                />
-                <Text
-                  className={`text-[10px] tracking-[0.2px] font-medium ${isActive ? 'text-accent' : 'text-text-muted'}`}
-                >
-                  {t(item.labelKey)}
-                </Text>
+                <YStack items="center" justify="center" gap={3}>
+                  <Ionicons
+                    name={isActive ? item.activeIcon : item.icon}
+                    size={22}
+                    color={isActive ? colors.accent : `${colors.text}61`}
+                  />
+                  <Text
+                    fontSize={10}
+                    letterSpacing={0.2}
+                    fontWeight={isActive ? '700' : '500'}
+                    color={isActive ? colors.accent : colors.textMuted}
+                  >
+                    {t(item.labelKey)}
+                  </Text>
+                </YStack>
               </TouchableOpacity>
             );
           })}
-        </View>
-      </View>
-    </View>
+        </XStack>
+      </YStack>
+    </YStack>
   );
 }
